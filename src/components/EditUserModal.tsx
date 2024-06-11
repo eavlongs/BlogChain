@@ -56,7 +56,7 @@ export default function EditUserModal() {
                                 className="hidden"
                                 accept="image/*"
                             ></input>
-                            <Button as="span">Upload Profile</Button>
+                            <Button as="span">Change Profile</Button>
                         </label>
                         <Input
                             type="text"
