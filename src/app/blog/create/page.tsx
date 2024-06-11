@@ -65,7 +65,7 @@ export default function BlogCreatePage() {
                             <Link href="/">
                                 <Button>Cancel</Button>
                             </Link>
-                            <Button colorScheme="blue">Save</Button>
+                            <Button colorScheme="blue">Create</Button>
                         </div>
                     </CardBody>
                 </Card>
