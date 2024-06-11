@@ -93,8 +93,9 @@ export default function SwitchUserModal() {
                         {users.map((user, i) => {
                             return (
                                 <Button
+                                    key={`user-${user.id}-${i}`}
                                     size="lg"
-                                    className="grid items-start gap-4 p-3"
+                                    className="grid items-start gap-4 p-3 justify-start"
                                 >
                                     <Avatar
                                         src={user.profilePicture}
