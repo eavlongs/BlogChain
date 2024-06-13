@@ -1,4 +1,5 @@
 "use client";
+import CreateUser from "@/app/actions/create-user";
 import {
     Button,
     IconButton,
@@ -23,41 +24,46 @@ export default function CreateUserModal() {
         <>
             <IconButton
                 onClick={onOpen}
-                size="sm"
-                colorScheme="blue"
+                size='sm'
+                colorScheme='blue'
                 icon={<IconPlus />}
-                aria-label="Create User Button"
+                aria-label='Create User Button'
             />
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Create User</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody className="grid gap-4">
-                        <Image
-                            src={placeHolderImage}
-                            alt="Blog Image"
-                            className="object-cover rounded-full aspect-square"
-                            width={128}
-                            height={128}
-                        />
-                        <label>
-                            <input
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                            ></input>
-                            <Button as="span">Upload Profile</Button>
-                        </label>
-                        <Input type="text" placeholder="Username..." />
-                    </ModalBody>
+                    <form action={CreateUser}>
+                        <ModalBody className='grid gap-4'>
+                            <Image
+                                src={placeHolderImage}
+                                alt='Blog Image'
+                                className='object-cover rounded-full aspect-square'
+                                width={128}
+                                height={128}
+                            />
+                            <label>
+                                <input
+                                    type='file'
+                                    className='hidden'
+                                    accept='image/*'
+                                    name='profile_picture'
+                                />
+                                <Button as='span'>Upload Profile</Button>
+                            </label>
+                            <Input type='text' placeholder='Name' name='name' />
+                        </ModalBody>
 
-                    <ModalFooter>
-                        <Button mr={3} onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button colorScheme="blue">Create</Button>
-                    </ModalFooter>
+                        <ModalFooter>
+                            <Button mr={3} onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='blue' type='submit'>
+                                Create
+                            </Button>
+                        </ModalFooter>
+                    </form>
                 </ModalContent>
             </Modal>
         </>

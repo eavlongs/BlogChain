@@ -7,29 +7,36 @@ export const users = mysqlTable("users", {
     }).notNull(),
     previousHash: varchar("previous_hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     hash: varchar("hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     profilePicture: varchar("profile_picture", {
         length: 1000,
-    }).notNull(),
+    }),
     type: varchar("type", {
         length: 100,
         // add type here example .$type<"admin" | "user">()
-    }).notNull().$type(),
-    referenceTo: int("reference_to").notNull(),
-    version: int("version").notNull(),
+    })
+        .notNull()
+        .$type<"INSERT" | "UPDATE" | "DELETE">(),
+    referenceTo: int("reference_to").notNull().default(0),
+    version: int("version").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-})
+});
 
 export const blogs = mysqlTable("blogs", {
     id: int("id").primaryKey().autoincrement(),
-    userId: int("user_id").notNull().references(() => users.id, {
-        // if want to delete all blogs of user when user is deleted
-        // onDelete: "cascade",
-    }),
+    userId: int("user_id")
+        .notNull()
+        .references(() => users.id, {
+            // if want to delete all blogs of user when user is deleted
+            // onDelete: "cascade",
+        }),
     title: varchar("title", {
         length: 100,
     }).notNull(),
@@ -42,39 +49,55 @@ export const blogs = mysqlTable("blogs", {
     created_at: timestamp("created_at").defaultNow(),
     previousHash: varchar("previous_hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     hash: varchar("hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     type: varchar("type", {
         length: 100,
-        // add type here 
-    }).notNull().$type(),
-    referenceTo: int("reference_to").notNull(),
-    version: int("version").notNull(),
-})
+        // add type here
+    })
+        .notNull()
+        .$type<"INSERT" | "UPDATE" | "DELETE">(),
+    referenceTo: int("reference_to").notNull().default(0),
+    version: int("version").notNull().default(0),
+});
 
 export const likes = mysqlTable("likes", {
     id: int("id").primaryKey().autoincrement(),
-    userId: int("user_id").notNull().references(() => users.id, {
-        // if want to delete all likes of user when user is deleted
-        // onDelete: "cascade",
-    }),
-    blogId: int("blog_id").notNull().references(() => blogs.id, {
-        // if want to delete all likes of blog when blog is deleted
-        // onDelete: "cascade",
-    }),
+    userId: int("user_id")
+        .notNull()
+        .references(() => users.id, {
+            // if want to delete all likes of user when user is deleted
+            // onDelete: "cascade",
+        }),
+    blogId: int("blog_id")
+        .notNull()
+        .references(() => blogs.id, {
+            // if want to delete all likes of blog when blog is deleted
+            // onDelete: "cascade",
+        }),
     created_at: timestamp("created_at").defaultNow(),
     previousHash: varchar("previous_hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     hash: varchar("hash", {
         length: 150,
-    }).notNull().unique(),
+    })
+        .notNull()
+        .unique(),
     type: varchar("type", {
         length: 100,
-        // add type here 
-    }).notNull().$type(),
-    referenceTo: int("reference_to").notNull(),
-    version: int("version").notNull(),
-})
+        // add type here
+    })
+        .notNull()
+        .$type<"INSERT" | "UPDATE" | "DELETE">(),
+    referenceTo: int("reference_to").notNull().default(0),
+    version: int("version").notNull().default(0),
+});

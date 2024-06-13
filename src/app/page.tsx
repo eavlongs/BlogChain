@@ -1,22 +1,13 @@
 "use client";
-import Image from "next/image";
-import { Link } from "@chakra-ui/next-js";
-import {
-    Avatar,
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    CardHeader,
-    IconButton,
-    Text,
-} from "@chakra-ui/react";
-import { IconHeart, IconPlus } from "@tabler/icons-react";
-import Navbar from "@/components/Navbar";
-import { BlogType, UserType } from "@/types/types";
 import Blog from "@/components/Blog";
-import User from "@/components/User";
 import CreateUserModal from "@/components/CreateUserModal";
+import User from "@/components/User";
+import { BlogType, UserType } from "@/types/types";
+import { Link } from "@chakra-ui/next-js";
+import { IconButton } from "@chakra-ui/react";
+import { IconPlus } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import getUsers from "./actions/get-users";
 
 export default function Home() {
     const blogs: BlogType[] = [
@@ -89,81 +80,91 @@ export default function Home() {
         },
     ];
 
-    const users: UserType[] = [
-        {
-            id: 101,
-            name: "John Doe",
-            profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
-        },
-        {
-            id: 102,
-            name: "Jane Smith",
-            profilePicture: "https://randomuser.me/api/portraits/women/2.jpg",
-        },
-        {
-            id: 103,
-            name: "Bob Brown",
-            profilePicture: "https://randomuser.me/api/portraits/men/3.jpg",
-        },
-        {
-            id: 104,
-            name: "Alice Green",
-            profilePicture: "https://randomuser.me/api/portraits/women/4.jpg",
-        },
-        {
-            id: 105,
-            name: "Charlie White",
-            profilePicture: "https://randomuser.me/api/portraits/men/5.jpg",
-        },
-        {
-            id: 106,
-            name: "Emily Clark",
-            profilePicture: "https://randomuser.me/api/portraits/women/5.jpg",
-        },
-        {
-            id: 107,
-            name: "David Wilson",
-            profilePicture: "https://randomuser.me/api/portraits/men/6.jpg",
-        },
-        {
-            id: 108,
-            name: "Sophia Martinez",
-            profilePicture: "https://randomuser.me/api/portraits/women/6.jpg",
-        },
-        {
-            id: 109,
-            name: "James Johnson",
-            profilePicture: "https://randomuser.me/api/portraits/men/7.jpg",
-        },
-        {
-            id: 110,
-            name: "Mia Taylor",
-            profilePicture: "https://randomuser.me/api/portraits/women/7.jpg",
-        },
-    ];
+    const [users, setUsers] = useState<UserType[]>([]);
+
+    // const users: UserType[] = [
+    //     {
+    //         id: 101,
+    //         name: "John Doe",
+    //         profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
+    //     },
+    //     {
+    //         id: 102,
+    //         name: "Jane Smith",
+    //         profilePicture: "https://randomuser.me/api/portraits/women/2.jpg",
+    //     },
+    //     {
+    //         id: 103,
+    //         name: "Bob Brown",
+    //         profilePicture: "https://randomuser.me/api/portraits/men/3.jpg",
+    //     },
+    //     {
+    //         id: 104,
+    //         name: "Alice Green",
+    //         profilePicture: "https://randomuser.me/api/portraits/women/4.jpg",
+    //     },
+    //     {
+    //         id: 105,
+    //         name: "Charlie White",
+    //         profilePicture: "https://randomuser.me/api/portraits/men/5.jpg",
+    //     },
+    //     {
+    //         id: 106,
+    //         name: "Emily Clark",
+    //         profilePicture: "https://randomuser.me/api/portraits/women/5.jpg",
+    //     },
+    //     {
+    //         id: 107,
+    //         name: "David Wilson",
+    //         profilePicture: "https://randomuser.me/api/portraits/men/6.jpg",
+    //     },
+    //     {
+    //         id: 108,
+    //         name: "Sophia Martinez",
+    //         profilePicture: "https://randomuser.me/api/portraits/women/6.jpg",
+    //     },
+    //     {
+    //         id: 109,
+    //         name: "James Johnson",
+    //         profilePicture: "https://randomuser.me/api/portraits/men/7.jpg",
+    //     },
+    //     {
+    //         id: 110,
+    //         name: "Mia Taylor",
+    //         profilePicture: "https://randomuser.me/api/portraits/women/7.jpg",
+    //     },
+    // ];
     const user: UserType = {
         id: 101,
         name: "John Doe",
         profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
     };
 
+    useEffect(() => {
+        async function fetchData() {
+            const _users = await getUsers();
+            setUsers(_users);
+        }
+        fetchData();
+    }, []);
+
     return (
-        <div className="grid grid-cols-4 gap-8">
-            <section className="col-span-3 grid">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold">
+        <div className='grid grid-cols-4 gap-8'>
+            <section className='col-span-3 grid'>
+                <div className='flex items-center justify-between mb-4'>
+                    <h1 className='text-2xl font-bold'>
                         Blogs - {blogs.length}
                     </h1>
                     <Link href={"/blog/create"}>
                         <IconButton
-                            size="sm"
-                            colorScheme="blue"
+                            size='sm'
+                            colorScheme='blue'
                             icon={<IconPlus />}
-                            aria-label="Create Blog Button"
+                            aria-label='Create Blog Button'
                         />
                     </Link>
                 </div>
-                <ul className="w-full grid gap-4">
+                <ul className='w-full grid gap-4'>
                     {blogs.map((blog, i) => {
                         return (
                             <Blog
@@ -177,13 +178,13 @@ export default function Home() {
                 </ul>
             </section>
             <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold">
+                <div className='flex items-center justify-between mb-4'>
+                    <h1 className='text-2xl font-bold'>
                         Users - {users.length}
                     </h1>
                     <CreateUserModal />
                 </div>
-                <ul className="grid gap-2">
+                <ul className='grid gap-2'>
                     {users.map((user, i) => {
                         return (
                             <User user={user} key={`user-${user.id}-${i}`} />
