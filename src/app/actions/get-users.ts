@@ -21,6 +21,5 @@ export default async function getUsers(): Promise<UserType[]> {
         }
     }
 
-    console.log(returnedUsers);
     return returnedUsers as UserType[];
 }

@@ -26,7 +26,7 @@ export const users = mysqlTable("users", {
         .$type<"INSERT" | "UPDATE" | "DELETE">(),
     referenceTo: int("reference_to").notNull().default(0),
     version: int("version").notNull().default(0),
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const blogs = mysqlTable("blogs", {
@@ -45,8 +45,8 @@ export const blogs = mysqlTable("blogs", {
     }).notNull(),
     imageUrl: varchar("image_url", {
         length: 1000,
-    }).notNull(),
-    created_at: timestamp("created_at").defaultNow(),
+    }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
     previousHash: varchar("previous_hash", {
         length: 150,
     })
@@ -81,7 +81,7 @@ export const likes = mysqlTable("likes", {
             // if want to delete all likes of blog when blog is deleted
             // onDelete: "cascade",
         }),
-    created_at: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
     previousHash: varchar("previous_hash", {
         length: 150,
     })

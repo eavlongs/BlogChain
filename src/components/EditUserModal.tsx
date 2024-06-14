@@ -1,5 +1,4 @@
 "use client";
-import { UserType } from "@/types/types";
 import {
     Avatar,
     Button,
@@ -14,27 +13,25 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import { useContext } from "react";
+import { CurrentUserContext } from "./CurrentUserContext";
 
 export default function EditUserModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const user: UserType = {
-        id: 101,
-        name: "John Doe",
-        profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
-    };
-    return (
+    const { currentUser: user } = useContext(CurrentUserContext);
+    return user ? (
         <>
             <Button
-                colorScheme="teal"
-                variant="ghost"
+                colorScheme='teal'
+                variant='ghost'
                 onClick={onOpen}
-                className="group"
+                className='group'
             >
-                <div className="flex items-center gap-4">
-                    <h2 className="font-bold text-white group-hover:text-black">
+                <div className='flex items-center gap-4'>
+                    <h2 className='font-bold text-white group-hover:text-black'>
                         {user.name}
                     </h2>
-                    <Avatar size="sm" src={user.profilePicture}></Avatar>
+                    <Avatar size='sm' src={user.profilePicture}></Avatar>
                 </div>
             </Button>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -42,26 +39,26 @@ export default function EditUserModal() {
                 <ModalContent>
                     <ModalHeader>Edit User</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody className="grid gap-4">
+                    <ModalBody className='grid gap-4'>
                         <Image
                             src={user.profilePicture}
-                            alt="Blog Image"
-                            className="object-cover rounded-full aspect-square"
+                            alt='Blog Image'
+                            className='object-cover rounded-full aspect-square'
                             width={128}
                             height={128}
                         />
                         <label>
                             <input
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
+                                type='file'
+                                className='hidden'
+                                accept='image/*'
                             ></input>
-                            <Button as="span">Change Profile</Button>
+                            <Button as='span'>Change Profile</Button>
                         </label>
                         <Input
-                            type="text"
+                            type='text'
                             value={user.name}
-                            placeholder="Username..."
+                            placeholder='Username...'
                         />
                     </ModalBody>
 
@@ -69,10 +66,24 @@ export default function EditUserModal() {
                         <Button mr={3} onClick={onClose}>
                             Cancel
                         </Button>
-                        <Button colorScheme="blue">Save</Button>
+                        <Button colorScheme='blue'>Save</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
         </>
+    ) : (
+        <Button
+            colorScheme='teal'
+            variant='ghost'
+            onClick={onOpen}
+            className='group'
+        >
+            <div className='flex items-center gap-4'>
+                <h2 className='font-bold text-white group-hover:text-black'>
+                    No User Selected
+                </h2>
+                <Avatar size='sm' />
+            </div>
+        </Button>
     );
 }

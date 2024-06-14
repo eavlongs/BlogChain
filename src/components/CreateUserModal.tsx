@@ -59,7 +59,11 @@ export default function CreateUserModal() {
                             <Button mr={3} onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button colorScheme='blue' type='submit'>
+                            <Button
+                                colorScheme='blue'
+                                type='submit'
+                                onClick={onClose}
+                            >
                                 Create
                             </Button>
                         </ModalFooter>
