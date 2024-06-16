@@ -27,6 +27,7 @@ export function createDatabaseConnection() {
     return drizzle(poolConnection, {
         schema,
         mode: "default",
+        logger: true,
     });
 }
 

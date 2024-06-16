@@ -2,10 +2,14 @@
 
 import { db } from "@/drizzle/db";
 import { users } from "@/drizzle/schema";
+import { users_sq } from "@/lib/subqueries";
 import { UserType } from "@/types/types";
-import { asc } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
 
 export default async function getUsers(): Promise<UserType[]> {
+    const parent = alias(users, "parent");
+
     const returnedUsers = await db
         .select({
             id: users.id,
@@ -13,7 +17,13 @@ export default async function getUsers(): Promise<UserType[]> {
             profilePicture: users.profilePicture,
         })
         .from(users)
-        .orderBy(asc(users.name));
+        .innerJoin(
+            users_sq,
+            and(
+                eq(users.id, users_sq.id),
+                eq(users.version, users_sq.users_max_version)
+            )
+        );
 
     for (const user of returnedUsers) {
         if (user.profilePicture === null) {

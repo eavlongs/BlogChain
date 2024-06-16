@@ -1,6 +1,7 @@
 "use client";
 import Blog from "@/components/Blog";
 import CreateUserModal from "@/components/CreateUserModal";
+import { CurrentUserContext } from "@/components/CurrentUserContext";
 import User from "@/components/User";
 import { UsersContext } from "@/components/UsersContext";
 import { BlogType, UserType } from "@/types/types";
@@ -11,12 +12,7 @@ import { useContext } from "react";
 
 export default function Home({ blogs }: { blogs: BlogType[] }) {
     const users = useContext(UsersContext);
-
-    const user: UserType = {
-        id: 101,
-        name: "John Doe",
-        profilePicture: "https://randomuser.me/api/portraits/men/1.jpg",
-    };
+    const { currentUser: user } = useContext(CurrentUserContext);
 
     return (
         <div className='grid grid-cols-4 gap-8'>
@@ -40,8 +36,8 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
                             <Blog
                                 blog={blog}
                                 key={`blog-${blog.id}-${i}`}
-                                showEdit={blog.user.id == user.id}
-                                isLiked={blog.user.id == user.id}
+                                showEdit={blog.user.id == user?.id}
+                                isLiked={blog.user.id == user?.id}
                             />
                         );
                     })}

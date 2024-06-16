@@ -1,7 +1,8 @@
 import { int, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
-    id: int("id").primaryKey().autoincrement(),
+    record_no: int("record_no").primaryKey().autoincrement(),
+    id: int("id").notNull(),
     name: varchar("name", {
         length: 100,
     }).notNull(),
@@ -24,19 +25,19 @@ export const users = mysqlTable("users", {
     })
         .notNull()
         .$type<"INSERT" | "UPDATE" | "DELETE">(),
-    referenceTo: int("reference_to").notNull().default(0),
+    // referenceTo: int("reference_to").notNull().default(0),
     version: int("version").notNull().default(0),
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const blogs = mysqlTable("blogs", {
-    id: int("id").primaryKey().autoincrement(),
-    userId: int("user_id")
-        .notNull()
-        .references(() => users.id, {
-            // if want to delete all blogs of user when user is deleted
-            // onDelete: "cascade",
-        }),
+    record_no: int("record_no").primaryKey().autoincrement(),
+    id: int("id").notNull(),
+    userId: int("user_id").notNull(),
+    // .references(() => users.id, {
+    //     // if want to delete all blogs of user when user is deleted
+    //     // onDelete: "cascade",
+    // }),
     title: varchar("title", {
         length: 100,
     }).notNull(),
@@ -63,24 +64,23 @@ export const blogs = mysqlTable("blogs", {
     })
         .notNull()
         .$type<"INSERT" | "UPDATE" | "DELETE">(),
-    referenceTo: int("reference_to").notNull().default(0),
+    // referenceTo: int("reference_to").notNull().default(0),
     version: int("version").notNull().default(0),
 });
 
 export const likes = mysqlTable("likes", {
-    id: int("id").primaryKey().autoincrement(),
-    userId: int("user_id")
-        .notNull()
-        .references(() => users.id, {
-            // if want to delete all likes of user when user is deleted
-            // onDelete: "cascade",
-        }),
-    blogId: int("blog_id")
-        .notNull()
-        .references(() => blogs.id, {
-            // if want to delete all likes of blog when blog is deleted
-            // onDelete: "cascade",
-        }),
+    record_no: int("record_no").primaryKey().autoincrement(),
+    id: int("id").notNull(),
+    userId: int("user_id").notNull(),
+    // .references(() => users.id, {
+    //     // if want to delete all likes of user when user is deleted
+    //     // onDelete: "cascade",
+    // }),
+    blogId: int("blog_id").notNull(),
+    // .references(() => blogs.id, {
+    //     // if want to delete all likes of blog when blog is deleted
+    //     // onDelete: "cascade",
+    // }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     previousHash: varchar("previous_hash", {
         length: 150,
@@ -98,6 +98,6 @@ export const likes = mysqlTable("likes", {
     })
         .notNull()
         .$type<"INSERT" | "UPDATE" | "DELETE">(),
-    referenceTo: int("reference_to").notNull().default(0),
+    // referenceTo: int("reference_to").notNull().default(0),
     version: int("version").notNull().default(0),
 });

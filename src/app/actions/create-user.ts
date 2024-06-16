@@ -12,24 +12,32 @@ export default async function CreateUser(formData: FormData) {
 
     let previousHash = "0";
     let id = 1;
+    let newRecordNo = 1;
 
-    const user = await db
+    const lastInsertUser = await db
         .select()
         .from(users)
-        .orderBy(desc(users.createdAt))
+        .orderBy(desc(users.id), desc(users.record_no))
         .limit(1);
 
-    if (user.length > 0) {
-        previousHash = user[0].hash;
-        id = user[0].id + 1;
+    const lastUserEntry = await db
+        .select()
+        .from(users)
+        .orderBy(desc(users.record_no))
+        .limit(1);
+
+    if (lastInsertUser.length > 0) {
+        previousHash = lastUserEntry[0].hash;
+        id = lastInsertUser[0].id + 1;
+        newRecordNo = lastUserEntry[0].record_no + 1;
     }
 
     const newUser: User = {
+        record_no: newRecordNo,
         id,
         createdAt: new Date(),
         previousHash,
         name,
-        referenceTo: 0,
         version: 0,
         type: "INSERT",
         profilePicture: null,

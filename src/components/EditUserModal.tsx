@@ -1,4 +1,6 @@
 "use client";
+
+import editUser from "@/app/actions/edit-user";
 import {
     Avatar,
     Button,
@@ -12,7 +14,6 @@ import {
     ModalOverlay,
     useDisclosure,
 } from "@chakra-ui/react";
-import Image from "next/image";
 import { useContext } from "react";
 import { CurrentUserContext } from "./CurrentUserContext";
 
@@ -39,35 +40,45 @@ export default function EditUserModal() {
                 <ModalContent>
                     <ModalHeader>Edit User</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody className='grid gap-4'>
-                        <Image
-                            src={user.profilePicture}
-                            alt='Blog Image'
-                            className='object-cover rounded-full aspect-square'
-                            width={128}
-                            height={128}
-                        />
-                        <label>
+                    <form action={editUser}>
+                        <ModalBody className='grid gap-4'>
                             <input
-                                type='file'
-                                className='hidden'
-                                accept='image/*'
-                            ></input>
-                            <Button as='span'>Change Profile</Button>
-                        </label>
-                        <Input
-                            type='text'
-                            value={user.name}
-                            placeholder='Username...'
-                        />
-                    </ModalBody>
+                                type='hidden'
+                                name='user_id'
+                                value={user.id}
+                            />
+                            <Avatar
+                                src={user.profilePicture}
+                                className='object-cover rounded-full aspect-square'
+                                width={128}
+                                height={128}
+                            />
+                            <label>
+                                <input
+                                    type='file'
+                                    className='hidden'
+                                    accept='image/*'
+                                    name='profile_picture'
+                                />
+                                <Button as='span'>Change Profile</Button>
+                            </label>
+                            <Input
+                                type='text'
+                                defaultValue={user.name}
+                                name='name'
+                                placeholder='Username...'
+                            />
+                        </ModalBody>
 
-                    <ModalFooter>
-                        <Button mr={3} onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button colorScheme='blue'>Save</Button>
-                    </ModalFooter>
+                        <ModalFooter>
+                            <Button mr={3} onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='blue' type='submit'>
+                                Save
+                            </Button>
+                        </ModalFooter>
+                    </form>
                 </ModalContent>
             </Modal>
         </>
