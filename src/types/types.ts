@@ -1,5 +1,5 @@
 import { blogs, likes, users } from "@/drizzle/schema";
-import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export type BlogType = {
     id: number;
@@ -7,6 +7,7 @@ export type BlogType = {
     description: string;
     imageUrl: string;
     user: UserType;
+    likes: LikeType[];
     createdAt: string;
 };
 
@@ -16,6 +17,16 @@ export type UserType = {
     profilePicture: string;
 };
 
+export type LikeType = {
+    id: number;
+    userId: number;
+    blogId: number;
+}
+
 export type User = InferSelectModel<typeof users>;
 export type Blog = InferSelectModel<typeof blogs>;
 export type Like = InferSelectModel<typeof likes>;
+
+export type UserInsert = InferInsertModel<typeof users>;
+export type BlogInsert = InferInsertModel<typeof blogs>;
+export type LikeInsert = InferInsertModel<typeof likes>;

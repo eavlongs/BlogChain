@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { blogs, users } from "@/drizzle/schema";
-import { blogs_sq, users_sq } from "@/lib/subqueries";
+import { blogs, likes, users } from "@/drizzle/schema";
+import { blogs_sq, likes_sq, users_sq } from "@/lib/subqueries";
 import { BlogType } from "@/types/types";
 import { and, eq } from "drizzle-orm";
 
@@ -12,6 +12,7 @@ export async function getBlogById(id: number): Promise<BlogType | null> {
             id: blogs.id,
             title: blogs.title,
             description: blogs.description,
+            type: blogs.type,
             imageUrl: blogs.imageUrl,
             user: {
                 id: users.id,
@@ -42,6 +43,10 @@ export async function getBlogById(id: number): Promise<BlogType | null> {
         return null;
     }
 
+    if (returnedBlog[0].type === "DELETE") {
+        return null;
+    }
+
     if (returnedBlog[0].user.profilePicture === null) {
         returnedBlog[0].user.profilePicture = "";
     }
@@ -59,6 +64,7 @@ export async function getBlogById(id: number): Promise<BlogType | null> {
             name: returnedBlog[0].user.name,
             profilePicture: returnedBlog[0].user.profilePicture || "",
         },
+        likes: [],
         imageUrl: returnedBlog[0].imageUrl || "",
         createdAt: returnedBlog[0].createdAt.toString(),
     };

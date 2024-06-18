@@ -1,5 +1,5 @@
 import { db } from "@/drizzle/db";
-import { blogs, users } from "@/drizzle/schema";
+import { blogs, likes, users } from "@/drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 
@@ -32,3 +32,18 @@ export const blogs_sq = db
     .innerJoin(blogs_child, eq(blogs_parent.id, blogs_child.id))
     .groupBy(blogs_child.id)
     .as("blogs_sq");
+
+const blogs_like_parent = alias(likes, "blogs_like_parent");
+const blogs_like_child = alias(likes, "blogs_like_child");
+
+export const likes_sq = db
+    .select({
+        id: blogs_like_child.id,
+        likes_max_version: sql`max(${blogs_like_child.version})`.as(
+            "likes_max_version"
+        ),
+    })
+    .from(blogs_like_parent)
+    .innerJoin(blogs_like_child, eq(blogs_like_parent.id, blogs_like_child.id))
+    .groupBy(blogs_like_child.id)
+    .as("likes_sq");

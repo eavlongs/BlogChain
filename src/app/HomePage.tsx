@@ -15,42 +15,37 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
     const { currentUser: user } = useContext(CurrentUserContext);
 
     return (
-        <div className='grid grid-cols-4 gap-8'>
-            <section className='col-span-3 grid'>
-                <div className='flex items-center justify-between mb-4'>
-                    <h1 className='text-2xl font-bold'>
+        <div className="grid grid-cols-4 gap-8">
+            <section className="col-span-3 grid">
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-2xl font-bold">
                         Blogs - {blogs.length}
                     </h1>
                     <Link href={"/blog/create"}>
                         <IconButton
-                            size='sm'
-                            colorScheme='blue'
+                            size="sm"
+                            colorScheme="blue"
                             icon={<IconPlus />}
-                            aria-label='Create Blog Button'
+                            aria-label="Create Blog Button"
                         />
                     </Link>
                 </div>
-                <ul className='w-full grid gap-4'>
+                <ul className="w-full grid gap-4">
                     {blogs.map((blog, i) => {
                         return (
-                            <Blog
-                                blog={blog}
-                                key={`blog-${blog.id}-${i}`}
-                                showEdit={blog.user.id == user?.id}
-                                isLiked={blog.user.id == user?.id}
-                            />
+                            <Blog blog={blog} key={`blog-${blog.id}-${i}`} />
                         );
                     })}
                 </ul>
             </section>
             <section>
-                <div className='flex items-center justify-between mb-4'>
-                    <h1 className='text-2xl font-bold'>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-2xl font-bold">
                         Users - {users.length}
                     </h1>
                     <CreateUserModal />
                 </div>
-                <ul className='grid gap-2'>
+                <ul className="grid gap-2">
                     {users.map((user, i) => {
                         return (
                             <User user={user} key={`user-${user.id}-${i}`} />
