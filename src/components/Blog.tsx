@@ -55,14 +55,14 @@ export default function Blog({ blog }: { blog: BlogType }) {
                     </div>
                 )}
             </CardHeader>
-            <Image
+            {blog.imageUrl && <Image
                 src={blog.imageUrl}
                 alt="Blog Image"
                 className="object-cover w-full h-auto"
                 sizes="100vw"
                 width={0}
                 height={0}
-            />
+            />}
             <CardBody className="grid gap-2">
                 <Text className="text-lg font-bold">{blog.title}</Text>
                 <Text>{blog.description}</Text>

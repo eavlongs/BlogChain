@@ -6,13 +6,17 @@ import User from "@/components/User";
 import { UsersContext } from "@/components/UsersContext";
 import { BlogType, UserType } from "@/types/types";
 import { Link } from "@chakra-ui/next-js";
-import { IconButton } from "@chakra-ui/react";
+import { Button, IconButton, useToast } from "@chakra-ui/react";
 import { IconPlus } from "@tabler/icons-react";
 import { useContext } from "react";
+import isBlogValid from "./actions/is_blog_valid";
+import isUserValid from "./actions/is_user_valid";
+import isLikeValid from "./actions/is_like_valid";
 
 export default function Home({ blogs }: { blogs: BlogType[] }) {
     const users = useContext(UsersContext);
     const { currentUser: user } = useContext(CurrentUserContext);
+    const toast = useToast();
 
     return (
         <div className="grid grid-cols-4 gap-8">
@@ -39,6 +43,56 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
                 </ul>
             </section>
             <section>
+                <div className="flex flex-col gap-2">
+                    <Button
+                        onClick={async () => {
+                            const isValid = await isBlogValid();
+    
+                            toast({
+                                position: "top",
+                                title: "Is blog valid?",
+                                description: isValid ? "Blog is valid!" : "Blog is not valid!",
+                                status: isValid ? "success" : "error",
+                                duration: 2500,
+                                isClosable: true,
+                            });
+                        }}
+                    >
+                        Is blog valid?
+                    </Button>
+                    <Button
+                        onClick={async () => {
+                            const isValid = await isUserValid();
+    
+                            toast({
+                                position: "top",
+                                title: "Is user valid?",
+                                description: isValid ? "User is valid!" : "User is not valid!",
+                                status: isValid ? "success" : "error",
+                                duration: 2500,
+                                isClosable: true,
+                            });
+                        }}
+                    >
+                        Is user valid?
+                    </Button>
+                    <Button
+                        onClick={async () => {
+                            const isValid = await isLikeValid();
+    
+                            toast({
+                                position: "top",
+                                title: "Is like valid?",
+                                description: isValid ? "Like is valid!" : "Like is not valid!",
+                                status: isValid ? "success" : "error",
+                                duration: 2500,
+                                isClosable: true,
+                            });
+                        }}
+                    >
+                        Is like valid?
+                    </Button>
+                </div>
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">
                         Users - {users.length}
