@@ -6,10 +6,11 @@ import { calculateHash } from "@/lib/utils";
 import { User } from "@/types/types";
 import { desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { createFile } from "./create-file";
 
 export default async function CreateUser(formData: FormData) {
     const name = formData.get("name") as string;
-
+    const filenames = await createFile(formData);
     let previousHash = "0";
     let id = 1;
     let newRecordNo = 1;
@@ -40,7 +41,7 @@ export default async function CreateUser(formData: FormData) {
         name,
         version: 0,
         type: "INSERT",
-        profilePicture: null,
+        profilePicture: filenames[0],
         hash: "",
     };
 

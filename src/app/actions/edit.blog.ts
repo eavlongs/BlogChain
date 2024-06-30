@@ -8,16 +8,13 @@ import { asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createFile } from "./create-file";
 
 export default async function editBlog(formData: FormData) {
     const blogId = parseInt(formData.get("blog_id")!.toString());
     const userId = parseInt(formData.get("user_id")!.toString());
+    const filenames = await createFile(formData);
 
-    let image: File | null = null;
-
-    if (formData.has("image") && formData.get("image") instanceof File) {
-        image = formData.get("image") as File;
-    }
     let blogExists = true;
 
     const parent = alias(blogs, "parent");
@@ -57,16 +54,13 @@ export default async function editBlog(formData: FormData) {
         .orderBy(desc(blogs.record_no))
         .limit(1);
 
-    // if request has a profile picture, upload it and get the URL, otherwise, use the old one
-    const imageUrl = null;
-
     const updatedBlog: Blog = {
         record_no: lastBlog[0].record_no + 1,
         id: blogId,
-        userId: lastBlog[0].userId,
+        userId: userId,
         title: formData.get("title")!.toString(),
         description: formData.get("description")!.toString(),
-        imageUrl: imageUrl,
+        imageUrl: filenames[0],
         type: "UPDATE",
         previousHash: lastBlog[0].hash,
         version: existingBlogHistory[0].child.version + 1,

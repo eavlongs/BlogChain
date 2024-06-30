@@ -6,7 +6,7 @@ import SwitchUserModal from "./SwitchUserModal";
 
 export default function Navbar() {
     return (
-        <nav className="bg-teal-500">
+        <nav className="bg-teal-500 sticky w-full top-0 z-50">
             <div className="flex justify-between p-4 items-center mx-auto w-full max-w-[1000px] text-white">
                 <Link href={"/"}>
                     <h1 className="text-3xl font-bold">BlogChain</h1>

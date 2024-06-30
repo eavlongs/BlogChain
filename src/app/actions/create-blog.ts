@@ -7,8 +7,10 @@ import { Blog } from "@/types/types";
 import { desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createFile } from "./create-file";
 
 export default async function createBlog(formData: FormData) {
+    const filenames = await createFile(formData);
     let previousHash = "0";
     let id = 1;
     let newRecordNo = 1;
@@ -39,7 +41,7 @@ export default async function createBlog(formData: FormData) {
         previousHash,
         title: formData.get("title") as string,
         description: formData.get("description") as string,
-        imageUrl: "",
+        imageUrl: filenames[0],
         version: 0,
         type: "INSERT",
         hash: "",

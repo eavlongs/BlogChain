@@ -23,20 +23,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import DeleteBlogModal from "./DeleteBlogModal";
-import { CurrentUserContext } from "./CurrentUserContext";
 import likeBlog from "@/app/actions/like-blog";
+import { filenameToURL } from "@/lib/files";
+import { useUsers } from "./UsersProvider";
 
 export default function Blog({ blog }: { blog: BlogType }) {
-    const { currentUser: user } = useContext(CurrentUserContext);
-    const isOwner = user?.id === blog.user.id;
-    const liked = blog.likes.some((like) => like.userId === user?.id);
+    const { users, currentUser, setCurrentUser } = useUsers();
+    const isOwner = currentUser?.id === blog.user.id;
+    const liked = blog.likes.some((like) => like.userId === currentUser?.id);
     const toast = useToast();
 
     return (
         <Card>
             <CardHeader className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Avatar src={blog.user.profilePicture}></Avatar>
+                    <Avatar
+                        src={filenameToURL(blog.user.profilePicture)}
+                    ></Avatar>
                     <h2 className="font-bold text-lg">{blog.user.name}</h2>
                 </div>
                 {/* show edit */}
@@ -55,14 +58,16 @@ export default function Blog({ blog }: { blog: BlogType }) {
                     </div>
                 )}
             </CardHeader>
-            {blog.imageUrl && <Image
-                src={blog.imageUrl}
-                alt="Blog Image"
-                className="object-cover w-full h-auto"
-                sizes="100vw"
-                width={0}
-                height={0}
-            />}
+            {blog.imageUrl && (
+                <Image
+                    src={filenameToURL(blog.imageUrl)}
+                    alt="Blog Image"
+                    className="object-cover w-full h-auto"
+                    sizes="100vw"
+                    width={0}
+                    height={0}
+                />
+            )}
             <CardBody className="grid gap-2">
                 <Text className="text-lg font-bold">{blog.title}</Text>
                 <Text>{blog.description}</Text>
@@ -79,7 +84,7 @@ export default function Blog({ blog }: { blog: BlogType }) {
                     </Text>
                     <IconButton
                         onClick={async () => {
-                            if (!user) {
+                            if (!currentUser) {
                                 toast({
                                     position: "top",
                                     title: "Not logged in",
@@ -92,7 +97,7 @@ export default function Blog({ blog }: { blog: BlogType }) {
                                 return;
                             }
 
-                            await likeBlog(user.id, blog.id);
+                            await likeBlog(currentUser.id, blog.id);
                         }}
                         colorScheme={liked ? "pink" : "teal"}
                         icon={liked ? <IconHeartFilled /> : <IconHeart />}

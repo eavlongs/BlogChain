@@ -1,9 +1,7 @@
 "use client";
 import Blog from "@/components/Blog";
 import CreateUserModal from "@/components/CreateUserModal";
-import { CurrentUserContext } from "@/components/CurrentUserContext";
 import User from "@/components/User";
-import { UsersContext } from "@/components/UsersContext";
 import { BlogType, UserType } from "@/types/types";
 import { Link } from "@chakra-ui/next-js";
 import { Button, IconButton, useToast } from "@chakra-ui/react";
@@ -12,10 +10,10 @@ import { useContext } from "react";
 import isBlogValid from "./actions/is_blog_valid";
 import isUserValid from "./actions/is_user_valid";
 import isLikeValid from "./actions/is_like_valid";
+import { useUsers } from "@/components/UsersProvider";
 
 export default function Home({ blogs }: { blogs: BlogType[] }) {
-    const users = useContext(UsersContext);
-    const { currentUser: user } = useContext(CurrentUserContext);
+    const { users, currentUser, setCurrentUser } = useUsers();
     const toast = useToast();
 
     return (
@@ -47,11 +45,13 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
                     <Button
                         onClick={async () => {
                             const isValid = await isBlogValid();
-    
+
                             toast({
                                 position: "top",
                                 title: "Is blog valid?",
-                                description: isValid ? "Blog is valid!" : "Blog is not valid!",
+                                description: isValid
+                                    ? "Blog is valid!"
+                                    : "Blog is not valid!",
                                 status: isValid ? "success" : "error",
                                 duration: 2500,
                                 isClosable: true,
@@ -63,11 +63,13 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
                     <Button
                         onClick={async () => {
                             const isValid = await isUserValid();
-    
+
                             toast({
                                 position: "top",
                                 title: "Is user valid?",
-                                description: isValid ? "User is valid!" : "User is not valid!",
+                                description: isValid
+                                    ? "User is valid!"
+                                    : "User is not valid!",
                                 status: isValid ? "success" : "error",
                                 duration: 2500,
                                 isClosable: true,
@@ -79,11 +81,13 @@ export default function Home({ blogs }: { blogs: BlogType[] }) {
                     <Button
                         onClick={async () => {
                             const isValid = await isLikeValid();
-    
+
                             toast({
                                 position: "top",
                                 title: "Is like valid?",
-                                description: isValid ? "Like is valid!" : "Like is not valid!",
+                                description: isValid
+                                    ? "Like is valid!"
+                                    : "Like is not valid!",
                                 status: isValid ? "success" : "error",
                                 duration: 2500,
                                 isClosable: true,

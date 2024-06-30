@@ -21,7 +21,7 @@ export type LikeType = {
     id: number;
     userId: number;
     blogId: number;
-}
+};
 
 export type User = InferSelectModel<typeof users>;
 export type Blog = InferSelectModel<typeof blogs>;

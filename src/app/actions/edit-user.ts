@@ -7,18 +7,11 @@ import { User } from "@/types/types";
 import { asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { revalidatePath } from "next/cache";
+import { createFile } from "./create-file";
 
 export default async function editUser(formData: FormData) {
     const userId = parseInt(formData.get("user_id")?.toString() ?? "");
-    console.log(userId);
-    let profileImage: File | null = null;
-
-    if (
-        formData.has("profile_picture") &&
-        formData.get("profile_picture") instanceof File
-    ) {
-        profileImage = formData.get("profile_picture") as File;
-    }
+    const filenames = await createFile(formData);
     let userExists = true;
 
     const parent = alias(users, "parent");
@@ -29,8 +22,6 @@ export default async function editUser(formData: FormData) {
         .innerJoin(child, eq(child.id, parent.id))
         .where(eq(parent.id, userId))
         .orderBy(desc(child.version));
-
-    console.log(existingUserHistory);
 
     if (existingUserHistory.length === 0) {
         userExists = false;
@@ -53,14 +44,11 @@ export default async function editUser(formData: FormData) {
         .orderBy(desc(users.record_no))
         .limit(1);
 
-    // if request has a profile picture, upload it and get the URL, otherwise, use the old one
-    const profilePictureURL = null;
-
     const updatedUser: User = {
         record_no: lastUser[0].record_no + 1,
         id: userId,
         name: formData.get("name")!.toString(),
-        profilePicture: profilePictureURL,
+        profilePicture: filenames[0],
         type: "UPDATE",
         previousHash: lastUser[0].hash,
         version: existingUserHistory[0].child.version + 1,

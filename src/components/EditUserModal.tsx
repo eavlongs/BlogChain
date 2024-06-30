@@ -14,25 +14,39 @@ import {
     ModalOverlay,
     useDisclosure,
 } from "@chakra-ui/react";
-import { useContext } from "react";
-import { CurrentUserContext } from "./CurrentUserContext";
+import { useContext, useEffect, useState } from "react";
+import { filenameToURL } from "@/lib/files";
+import { useUsers } from "./UsersProvider";
+import getUsers from "@/app/actions/get-users";
 
 export default function EditUserModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { currentUser: user } = useContext(CurrentUserContext);
-    return user ? (
+    const { users, currentUser, setCurrentUser } = useUsers();
+    const placeHolderImage = "https://placehold.co/128x128?text=Profile";
+    const [imageSrc, setImageSrc] = useState(currentUser?.profilePicture);
+
+    useEffect(() => {
+        if (currentUser) {
+            setImageSrc(currentUser.profilePicture);
+        }
+    }, [currentUser]);
+
+    return currentUser ? (
         <>
             <Button
-                colorScheme='teal'
-                variant='ghost'
+                colorScheme="teal"
+                variant="ghost"
                 onClick={onOpen}
-                className='group'
+                className="group"
             >
-                <div className='flex items-center gap-4'>
-                    <h2 className='font-bold text-white group-hover:text-black'>
-                        {user.name}
+                <div className="flex items-center gap-4">
+                    <h2 className="font-bold text-white group-hover:text-black">
+                        {currentUser.name}
                     </h2>
-                    <Avatar size='sm' src={user.profilePicture}></Avatar>
+                    <Avatar
+                        size="sm"
+                        src={filenameToURL(currentUser.profilePicture)}
+                    ></Avatar>
                 </div>
             </Button>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -40,33 +54,57 @@ export default function EditUserModal() {
                 <ModalContent>
                     <ModalHeader>Edit User</ModalHeader>
                     <ModalCloseButton />
-                    <form action={editUser}>
-                        <ModalBody className='grid gap-4'>
+                    <form
+                        action={editUser}
+                        onSubmit={() => {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 200);
+                        }}
+                    >
+                        <ModalBody className="grid gap-4">
                             <input
-                                type='hidden'
-                                name='user_id'
-                                value={user.id}
+                                type="hidden"
+                                name="user_id"
+                                value={currentUser.id}
                             />
                             <Avatar
-                                src={user.profilePicture}
-                                className='object-cover rounded-full aspect-square'
+                                src={filenameToURL(imageSrc)}
+                                className="object-cover rounded-full aspect-square"
                                 width={128}
                                 height={128}
                             />
                             <label>
                                 <input
-                                    type='file'
-                                    className='hidden'
-                                    accept='image/*'
-                                    name='profile_picture'
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    name="image"
+                                    required
+                                    onChange={(e) => {
+                                        if (
+                                            e.target.files &&
+                                            e.target.files[0]
+                                        ) {
+                                            //console.log(
+                                            //     "File type:",
+                                            //     e.target.files[0].type,
+                                            // );
+                                            setImageSrc(
+                                                URL.createObjectURL(
+                                                    e.target.files[0]
+                                                )
+                                            );
+                                        }
+                                    }}
                                 />
-                                <Button as='span'>Change Profile</Button>
+                                <Button as="span">Change Profile</Button>
                             </label>
                             <Input
-                                type='text'
-                                defaultValue={user.name}
-                                name='name'
-                                placeholder='Username...'
+                                type="text"
+                                defaultValue={currentUser.name}
+                                name="name"
+                                placeholder="Username..."
                             />
                         </ModalBody>
 
@@ -74,7 +112,7 @@ export default function EditUserModal() {
                             <Button mr={3} onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button colorScheme='blue' type='submit'>
+                            <Button colorScheme="blue" type="submit">
                                 Save
                             </Button>
                         </ModalFooter>
@@ -84,16 +122,16 @@ export default function EditUserModal() {
         </>
     ) : (
         <Button
-            colorScheme='teal'
-            variant='ghost'
+            colorScheme="teal"
+            variant="ghost"
             onClick={onOpen}
-            className='group'
+            className="group"
         >
-            <div className='flex items-center gap-4'>
-                <h2 className='font-bold text-white group-hover:text-black'>
+            <div className="flex items-center gap-4">
+                <h2 className="font-bold text-white group-hover:text-black">
                     No User Selected
                 </h2>
-                <Avatar size='sm' />
+                <Avatar size="sm" />
             </div>
         </Button>
     );
