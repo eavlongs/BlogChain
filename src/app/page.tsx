@@ -5,3 +5,5 @@ export default async function Page() {
     const blogs = await getBlogs();
     return <Home blogs={blogs} />;
 }
+
+export const dynamic = "force-dynamic";

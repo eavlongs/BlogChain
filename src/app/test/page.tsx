@@ -6,16 +6,16 @@ export default async function Test() {
     return (
         <div>
             <h1>Test</h1>
-            {
-                users.map((user) => {
-                    return (
-                        <div key={user.id}>
-                            <h2>{user.name}</h2>
-                            <img src={user.profilePicture} />
-                        </div>
-                    );
-                })
-            }
+            {users.map((user) => {
+                return (
+                    <div key={user.id}>
+                        <h2>{user.name}</h2>
+                        <img src={user.profilePicture || ""} />
+                    </div>
+                );
+            })}
         </div>
     );
 }
+
+export const dynamic = "force-dynamic";
